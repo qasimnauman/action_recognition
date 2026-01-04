@@ -1,285 +1,448 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>AI Vision Analyzer</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
-            background: #f8f9fa;
-            color: #1f2937;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        .header-section {
-            background: #ffffff;
-            padding: 100px 20px;
-            text-align: center;
-            position: relative;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        .header-section h1 {
-            font-size: 3rem;
-            font-weight: 600;
-            color: #111827;
-            margin-bottom: 16px;
-            letter-spacing: -0.025em;
-        }
-        .header-section p {
-            font-size: 1.125rem;
-            color: #6b7280;
-            max-width: 600px;
-            margin: 0 auto 32px;
-            line-height: 1.6;
-            font-weight: 400;
-        }
-        .start-button {
-            background: #0891b2;
-            color: white;
-            border: none;
-            padding: 12px 32px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            letter-spacing: 0.3px;
-        }
-        .start-button:hover {
-            background: #0e7490;
-            transform: translateY(-1px);
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "Helvetica Neue", sans-serif;
+        background: #f8f9fa;
+        color: #1f2937;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+      .header-section {
+        background: #ffffff;
+        padding: 100px 20px;
+        text-align: center;
+        position: relative;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .header-section h1 {
+        font-size: 3rem;
+        font-weight: 600;
+        color: #111827;
+        margin-bottom: 16px;
+        letter-spacing: -0.025em;
+      }
+      .header-section p {
+        font-size: 1.125rem;
+        color: #6b7280;
+        max-width: 600px;
+        margin: 0 auto 32px;
+        line-height: 1.6;
+        font-weight: 400;
+      }
+      .start-button {
+        background: #0891b2;
+        color: white;
+        border: none;
+        padding: 12px 32px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        letter-spacing: 0.3px;
+      }
+      .start-button:hover {
+        background: #0e7490;
+        transform: translateY(-1px);
+      }
+      .main-workspace {
+        max-width: 1200px;
+        margin: 60px auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        padding: 0 20px;
+      }
+      .left-panel {
+        background: #ffffff;
+        border: 2px solid #f97316;
+        border-radius: 12px;
+        padding: 32px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      }
+      .right-panel {
+        background: #ffffff;
+        border: 2px solid #0891b2;
+        border-radius: 12px;
+        padding: 32px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+      }
+      .section-title {
+        font-size: 0.875rem;
+        color: #374151;
+        font-weight: 600;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-bottom: 2px solid currentColor;
+        padding-bottom: 10px;
+      }
+      .left-panel .section-title {
+        color: #f97316;
+      }
+      .right-panel .section-title {
+        color: #0891b2;
+      }
+      .upload-zone {
+        border: 2px dashed #d1d5db;
+        border-radius: 8px;
+        padding: 36px 20px;
+        text-align: center;
+        background: #f9fafb;
+        transition: all 0.2s;
+        cursor: pointer;
+        margin-bottom: 20px;
+      }
+      .upload-zone:hover {
+        border-color: #f97316;
+        background: #fff7ed;
+      }
+      .upload-icon {
+        font-size: 2.5rem;
+        margin-bottom: 12px;
+        opacity: 0.5;
+      }
+      .upload-text {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-bottom: 16px;
+      }
+      .file-select-btn {
+        background: #f97316;
+        border: 1px solid #f97316;
+        color: #ffffff;
+        padding: 8px 20px;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-block;
+      }
+      .file-select-btn:hover {
+        background: #ea580c;
+        border-color: #ea580c;
+      }
+      #imageInput {
+        display: none;
+      }
+      #preview {
+        width: 100%;
+        max-height: 400px;
+        object-fit: contain;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: none;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      .action-button {
+        width: 100%;
+        background: #0891b2;
+        color: white;
+        border: none;
+        padding: 12px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        letter-spacing: 0.3px;
+      }
+      .action-button:hover {
+        background: #0e7490;
+        transform: translateY(-1px);
+      }
+      #resultBox {
+        margin-top: 20px;
+        background: linear-gradient(135deg, #ecfeff 0%, #fff7ed 100%);
+        border: 1px solid #0891b2;
+        border-radius: 8px;
+        padding: 20px;
+        display: none;
+        flex-grow: 1;
+      }
+      @media (max-width: 968px) {
         .main-workspace {
-            max-width: 1200px;
-            margin: 60px auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            padding: 0 20px;
+          grid-template-columns: 1fr;
         }
-        .left-panel {
-            background: #ffffff;
-            border: 2px solid #f97316;
-            border-radius: 12px;
-            padding: 32px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-        .right-panel {
-            background: #ffffff;
-            border: 2px solid #0891b2;
-            border-radius: 12px;
-            padding: 32px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            display: flex;
-            flex-direction: column;
-        }
-        .section-title {
-            font-size: 0.875rem;
-            color: #374151;
-            font-weight: 600;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 2px solid currentColor;
-            padding-bottom: 10px;
-        }
-        .left-panel .section-title {
-            color: #f97316;
-        }
-        .right-panel .section-title {
-            color: #0891b2;
-        }
-        .upload-zone {
-            border: 2px dashed #d1d5db;
-            border-radius: 8px;
-            padding: 36px 20px;
-            text-align: center;
-            background: #f9fafb;
-            transition: all 0.2s;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-        .upload-zone:hover {
-            border-color: #f97316;
-            background: #fff7ed;
-        }
-        .upload-icon {
-            font-size: 2.5rem;
-            margin-bottom: 12px;
-            opacity: 0.5;
-        }
-        .upload-text {
-            font-size: 0.875rem;
-            color: #6b7280;
-            margin-bottom: 16px;
-        }
-        .file-select-btn {
-            background: #f97316;
-            border: 1px solid #f97316;
-            color: #ffffff;
-            padding: 8px 20px;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-block;
-        }
-        .file-select-btn:hover {
-            background: #ea580c;
-            border-color: #ea580c;
-        }
-        #imageInput {
-            display: none;
-        }
-        #preview {
-            width: 100%;
-            max-height: 400px;
-            object-fit: contain;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-        .action-button {
-            width: 100%;
-            background: #0891b2;
-            color: white;
-            border: none;
-            padding: 12px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            letter-spacing: 0.3px;
-        }
-        .action-button:hover {
-            background: #0e7490;
-            transform: translateY(-1px);
-        }
-        #resultBox {
-            margin-top: 20px;
-            background: linear-gradient(135deg, #ecfeff 0%, #fff7ed 100%);
-            border: 1px solid #0891b2;
-            border-radius: 8px;
-            padding: 20px;
-            display: none;
-            flex-grow: 1;
-        }
-        @media (max-width: 968px) {
-            .main-workspace {
-                grid-template-columns: 1fr;
-            }
-        }
-        .result-label {
-            font-size: 0.75rem;
-            color: #f97316;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-        .result-value {
-            font-size: 1.125rem;
-            color: #111827;
-            font-weight: 600;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-        .divider {
-            height: 2px;
-            background: linear-gradient(90deg, #f97316 0%, #0891b2 100%);
-            margin: 20px 0;
-        }
+      }
+      .result-label {
+        font-size: 0.75rem;
+        color: #f97316;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+        font-weight: 600;
+      }
+      .result-value {
+        font-size: 1.125rem;
+        color: #111827;
+        font-weight: 600;
+        margin-bottom: 20px;
+        line-height: 1.5;
+      }
+      .divider {
+        height: 2px;
+        background: linear-gradient(90deg, #f97316 0%, #0891b2 100%);
+        margin: 20px 0;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="header-section">
-        <h1>Image Action Recognition</h1>
-        <p>Advanced AI-powered image analysis. Upload an image to identify actions and generate natural language descriptions.</p>
-        <button class="start-button" onclick="document.getElementById('container-anchor').scrollIntoView({behavior: 'smooth'})">Get Started</button>
+      <h1>Image Action Recognition</h1>
+      <p>
+        Advanced AI-powered image analysis. Upload an image to identify actions
+        and generate natural language descriptions.
+      </p>
+      <button
+        class="start-button"
+        onclick="document.getElementById('container-anchor').scrollIntoView({behavior: 'smooth'})"
+      >
+        Get Started
+      </button>
     </div>
-    
+
     <div id="container-anchor" class="main-workspace">
-        <div class="left-panel">
-            <div class="section-title">Upload & Analyze</div>
-            
-            <div class="upload-zone" onclick="document.getElementById('imageInput').click()">
-                <div class="upload-icon">🖼️</div>
-                <div class="upload-text">Click to select an image file</div>
-                <label class="file-select-btn" for="imageInput">Browse Files</label>
-            </div>
-            
-            <input type="file" id="imageInput" accept="image/*" onchange="previewImage()">
-            
-            <button class="action-button" onclick="uploadImage()">Analyze Now</button>
-            
-            <div id="resultBox">
-                <div class="result-label">Detected Action</div>
-                <div class="result-value" id="action"></div>
-                <div class="divider"></div>
-                <div class="result-label">Generated Description</div>
-                <div class="result-value" id="annotation"></div>
-            </div>
+      <div class="left-panel">
+        <div class="section-title">Upload & Analyze</div>
+
+        <div
+          class="upload-zone"
+          onclick="document.getElementById('imageInput').click()"
+        >
+          <div class="upload-icon">🖼️</div>
+          <div class="upload-text">Click to select an image file</div>
+          <label class="file-select-btn" for="imageInput">Browse Files</label>
         </div>
-        
-        <div class="right-panel">
-            <div class="section-title">Image Preview</div>
-            <img id="preview">
-            <div style="text-align: center; color: #9ca3af; font-size: 0.875rem; padding: 80px 20px;">
-                <div style="font-size: 2.5rem; margin-bottom: 12px; opacity: 0.2;">📷</div>
-                <p>Image preview will appear here</p>
-            </div>
+
+        <input
+          type="file"
+          id="imageInput"
+          accept="image/*"
+          onchange="previewImage()"
+        />
+
+        <button class="action-button" onclick="uploadImage()">
+          Analyze Now
+        </button>
+
+        <div id="resultBox">
+          <div class="result-label">Detected Action</div>
+          <div class="result-value" id="action"></div>
+          <div class="divider"></div>
+          <div class="result-label">Generated Description</div>
+          <div class="result-value" id="annotation"></div>
         </div>
+      </div>
+
+      <div class="right-panel">
+        <div class="section-title">Image Preview</div>
+        <img id="preview" />
+        <div
+          style="
+            text-align: center;
+            color: #9ca3af;
+            font-size: 0.875rem;
+            padding: 80px 20px;
+          "
+        >
+          <div style="font-size: 2.5rem; margin-bottom: 12px; opacity: 0.2">
+            📷
+          </div>
+          <p>Image preview will appear here</p>
+        </div>
+      </div>
     </div>
 
     <script>
-        // PASTE YOUR NGROK URL HERE
-        const API_URL = "https://truculently-unnarrow-rigoberto.ngrok-free.dev/predict";
+      // FastAPI Backend URL
+      const API_URL = "http://localhost:8000/predict";
 
-        function previewImage() {
-            const file = document.getElementById('imageInput').files[0];
-            const preview = document.getElementById('preview');
-            if (file) {
-                preview.src = URL.createObjectURL(file);
-                preview.style.display = 'block';
-            }
+      // Check API connection on page load
+      window.addEventListener("load", async () => {
+        try {
+          const response = await fetch("http://localhost:8000/health");
+          if (response.ok) {
+            console.log("✅ API connection successful");
+          } else {
+            console.warn("⚠️ API health check failed");
+          }
+        } catch (error) {
+          console.error(
+            "❌ Cannot connect to API. Make sure the server is running on port 8000"
+          );
+          showNotification(
+            "Backend server not running. Start the API with: python app.py",
+            "error"
+          );
+        }
+      });
+
+      function showNotification(message, type = "info") {
+        const notification = document.createElement("div");
+        notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === "error" ? "#ef4444" : "#0891b2"};
+                color: white;
+                padding: 16px 24px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                font-size: 0.9rem;
+                max-width: 400px;
+                animation: slideIn 0.3s ease-out;
+            `;
+        notification.textContent = message;
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+          notification.style.animation = "slideOut 0.3s ease-out";
+          setTimeout(() => notification.remove(), 300);
+        }, 5000);
+      }
+
+      function previewImage() {
+        const file = document.getElementById("imageInput").files[0];
+        const preview = document.getElementById("preview");
+        const placeholder = document.querySelector(
+          ".right-panel > div:last-child"
+        );
+
+        if (file) {
+          // Validate file size (max 10MB)
+          if (file.size > 10 * 1024 * 1024) {
+            showNotification("Image size must be less than 10MB", "error");
+            return;
+          }
+
+          // Validate file type
+          if (!file.type.startsWith("image/")) {
+            showNotification("Please select a valid image file", "error");
+            return;
+          }
+
+          preview.src = URL.createObjectURL(file);
+          preview.style.display = "block";
+          if (placeholder) placeholder.style.display = "none";
+
+          // Hide previous results
+          document.getElementById("resultBox").style.display = "none";
+        }
+      }
+
+      async function uploadImage() {
+        const fileInput = document.getElementById("imageInput");
+        const resultBox = document.getElementById("resultBox");
+        const actionSpan = document.getElementById("action");
+        const annotationSpan = document.getElementById("annotation");
+        const analyzeBtn = document.querySelector(".action-button");
+
+        // Validation
+        if (fileInput.files.length === 0) {
+          showNotification("Please select an image first", "error");
+          return;
         }
 
-        async function uploadImage() {
-            const fileInput = document.getElementById('imageInput');
-            if (fileInput.files.length === 0) return alert("Please select an image");
+        const formData = new FormData();
+        formData.append("image", fileInput.files[0]);
 
-            const formData = new FormData();
-            formData.append('image', fileInput.files[0]);
+        // Show loading state
+        resultBox.style.display = "block";
+        actionSpan.innerHTML =
+          '<span style="opacity: 0.6;">🔄 Analyzing...</span>';
+        annotationSpan.innerHTML =
+          '<span style="opacity: 0.6;">Processing image...</span>';
+        analyzeBtn.disabled = true;
+        analyzeBtn.style.opacity = "0.6";
+        analyzeBtn.style.cursor = "not-allowed";
+        analyzeBtn.textContent = "Processing...";
 
-            // Show the box and a loading message
-            document.getElementById('resultBox').style.display = 'block';
-            document.getElementById('action').innerText = "Processing...";
-            document.getElementById('annotation').innerText = "Generating caption...";
+        try {
+          const response = await fetch(API_URL, {
+            method: "POST",
+            body: formData,
+            // No need to set Content-Type, browser handles it with FormData
+          });
 
-            try {
-                const response = await fetch(API_URL, { method: 'POST', body: formData });
-                const data = await response.json();
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
 
-                if (data.status === "success") {
-                    // FIXED: Using 'action' and 'annotation' to match your HTML <span> tags
-                    document.getElementById('action').innerText = data.action;
-                    document.getElementById('annotation').innerText = data.annotation;
-                } else {
-                    alert("Error from API: " + data.message);
+          const data = await response.json();
+
+          if (data.status === "success") {
+            actionSpan.textContent = data.action;
+            annotationSpan.textContent = data.annotation;
+            showNotification("Analysis completed successfully!", "success");
+          } else {
+            throw new Error(data.detail || "Unknown error occurred");
+          }
+        } catch (error) {
+          console.error("Fetch Error:", error);
+          actionSpan.textContent = "Error";
+          annotationSpan.textContent =
+            "Could not analyze image. Please try again.";
+
+          if (
+            error.message.includes("Failed to fetch") ||
+            error.message.includes("NetworkError")
+          ) {
+            showNotification(
+              "Cannot connect to server. Make sure the API is running on port 8000.",
+              "error"
+            );
+          } else {
+            showNotification(`Error: ${error.message}`, "error");
+          }
+        } finally {
+          // Reset button state
+          analyzeBtn.disabled = false;
+          analyzeBtn.style.opacity = "1";
+          analyzeBtn.style.cursor = "pointer";
+          analyzeBtn.textContent = "Analyze Now";
+        }
+      }
+
+      // Add CSS for animations
+      const style = document.createElement("style");
+      style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(400px);
+                    opacity: 0;
                 }
-            } catch (error) {
-                console.error("Fetch Error:", error);
-                alert("Could not connect to the server. Check if Ngrok is still running!");
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
             }
-        }
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(400px);
+                    opacity: 0;
+                }
+            }
+        `;
+      document.head.appendChild(style);
     </script>
-</body>
+  </body>
 </html>
