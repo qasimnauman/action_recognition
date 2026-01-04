@@ -1,5 +1,8 @@
 # 🎯 Action Recognition & Image Captioning System
 
+## Students
+Muhammad Qasim Nauman - 221345
+
 An AI-powered web application that analyzes images to detect human actions and generate natural language descriptions using deep learning.
 
 ![Project Banner](outputs/out-1.png)
